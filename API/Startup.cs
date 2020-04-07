@@ -14,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using StackExchange.Redis;
 
 namespace API
 {
@@ -34,6 +35,14 @@ namespace API
       {
         x.UseSqlite(_config.GetConnectionString("DefaultConnection"));
       });
+
+      //싱글튼은 수명주기가 영원하다 앱이 돌아가는동안 
+      services.AddSingleton<IConnectionMultiplexer>(c =>
+      {
+        var configuration = ConfigurationOptions.Parse(_config.GetConnectionString("Redis"), true);
+        return ConnectionMultiplexer.Connect(configuration);
+      });
+
       services.AddApplicationServices();
       services.AddAutoMapper(typeof(MappingProfiles));
       services.AddSwaggerDocumnetation();
