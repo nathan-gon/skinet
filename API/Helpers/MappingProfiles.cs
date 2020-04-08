@@ -18,6 +18,12 @@ namespace API.Helpers
       //어드레스디티오를 클라리언트로부터 받아서 다시 어드레스로 넣어준다음에 다시 디티오로 리턴해야 하기 때문에
       CreateMap<Adress, AdressDto>().ReverseMap();
 
+      CreateMap<CustomerBasketDto, CustomerBasket>();
+
+      CreateMap<BasketItemDto, BasketItem>();
+
+
+
     }
   }
 }
