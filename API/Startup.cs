@@ -6,6 +6,7 @@ using API.Middleware;
 using AutoMapper;
 using Core.Interfaces;
 using Infrastructure.Data;
+using Infrastructure.Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -35,6 +36,10 @@ namespace API
       {
         x.UseSqlite(_config.GetConnectionString("DefaultConnection"));
       });
+      services.AddDbContext<AppIdentityDbContext>(x =>
+      {
+        x.UseSqlite(_config.GetConnectionString("IdentityConnection"));
+      });
 
       //싱글튼은 수명주기가 영원하다 앱이 돌아가는동안 
       services.AddSingleton<IConnectionMultiplexer>(c =>
@@ -42,7 +47,7 @@ namespace API
         var configuration = ConfigurationOptions.Parse(_config.GetConnectionString("Redis"), true);
         return ConnectionMultiplexer.Connect(configuration);
       });
-
+      services.AddIdentityServices(_config);
       services.AddApplicationServices();
       services.AddAutoMapper(typeof(MappingProfiles));
       services.AddSwaggerDocumnetation();
@@ -75,6 +80,7 @@ namespace API
       //wwwroot use
       app.UseStaticFiles();
 
+      app.UseAuthentication();
       app.UseAuthorization();
       app.UseCors("policy");
       app.useSwaggerDocumentation();
