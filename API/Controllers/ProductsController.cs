@@ -32,8 +32,6 @@ namespace API.Controllers
       _productsRepo = productsRepo;
       _productTypeRepo = productTypeRepo;
       _productBrandRepo = productBrandRepo;
-
-
     }
 
     [HttpGet]
